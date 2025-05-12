@@ -1,1 +1,1 @@
-# MisinformationShortcut
+# Truth over Tricks
