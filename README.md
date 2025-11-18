@@ -1,6 +1,28 @@
 # Truth over Tricks
 This is the official repository for the paper at NeurIPS 2025: [Truth over Tricks: Measuring and Mitigating Shortcut Learning in Misinformation Detection](https://arxiv.org/pdf/2506.02350)
 
+We have also uploaded the codes and related resources at the [Google Drive](https://drive.google.com/drive/folders/1DI5ZmiD_3y2V8VKt7bMYqfYSTGHzoo-F?usp=drive_link). If you want to directly replicate our results or employ the original/manipulated/debiased data, we recommend downloading it directly.
+
+## Baselines and Datasets
+We have evaluated three types of existing misinformation detectors using 16 datasets (including 14 public datasets and 2 generated knowledge-intensive datasets).
+- Encoder-based LMs
+  - BERT
+  - DeBERTA
+- LLM-based Detectors
+  - Mistral
+  - Llama
+- Debiasing Detectors
+  - CATCH: [paper](https://arxiv.org/pdf/2308.02080)
+  - DisC: [paper](https://proceedings.neurips.cc/paper_files/paper/2022/file/9e47a0bc530cc88b09b7670d2c130a29-Paper-Conference.pdf)
+  - CMTR: [paper](https://arxiv.org/pdf/2204.01841)
+
+Note that, for debiasing detectors, we have modified some minor details and hyperparameters to make them adaptive for our employed datasets.
+
+If you want to employ the original versions, please refer to their own papers.
+
+We have also uploaded our employed sampled datasets. (16 datasets, refer to our paper or codes for details)
+
+If you employ our version, please describe it correctly and cite our paper and the original paper.
 
 ## Citation
 If you find our work interesting/helpful, please consider citing this paper
@@ -28,6 +50,10 @@ url={https://openreview.net/forum?id=ngxGNQE1M2}
 Feel free to open issues in this repository! Instead of emails, GitHub issues are much better at facilitating a conversation between you and our team to address your needs. You can also contact Herun Wan through `wanherun at stu.xjtu.edu.cn`.
 
 ## Updating
+
+### 20251118
+- We have uploaded the complete resources of TruthOverTricks, including codes and related data.
+- We have provided a brief guideline to employ TruthOverTricks.
 
 ### 20251113
 - We plan to refine this repository by December.
