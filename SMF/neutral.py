@@ -1,0 +1,86 @@
+import os
+import json
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from argparse import ArgumentParser
+import random
+from tqdm import tqdm
+import transformers
+
+parser = ArgumentParser()
+parser.add_argument('--gpus', type=str, default='0,1')
+args = parser.parse_args()
+
+gpus = args.gpus
+os.environ['CUDA_VISIBLE_DEVICES'] = gpus
+pipeline = transformers.pipeline(
+    'text-generation',
+    model='meta-llama/Meta-Llama-3-8B-Instruct',
+    device_map="auto",
+)
+tokenizer = AutoTokenizer.from_pretrained('meta-llama/Meta-Llama-3-8B-Instruct')
+
+
+def construct_length(text, max_length=1024):
+    text = tokenizer.encode(text)
+    text = text[:max_length]
+    text = tokenizer.decode(text, skip_special_tokens=True)
+    return text[:max_length]
+
+
+@torch.no_grad()
+def get_reply(prompt):
+    terminators = [
+        pipeline.tokenizer.eos_token_id,
+        pipeline.tokenizer.convert_tokens_to_ids("<|eot_id|>")
+    ]
+    messages = [
+        {"role": "user", "content": prompt},
+    ]
+    outputs = pipeline(
+        messages,
+        max_new_tokens=1000,
+        eos_token_id=terminators,
+        do_sample=False,
+        pad_token_id=pipeline.tokenizer.eos_token_id
+    )
+    return outputs[0]["generated_text"][-1]['content']
+
+
+def main():
+    if not os.path.exists('data/neutral'):
+        os.mkdir('data/neutral')
+    rt_path = '../extrinsic/data'
+    dataset_types = ['original', 'sentiment', 'word-choice', 'tone', 'age', 'gender', 'llm-generation']
+    for dataset_type in dataset_types:
+        if dataset_type == 'original':
+            type_path = '../datasets'
+        else:
+            type_path = f'{rt_path}/{dataset_type}'
+        if not os.path.isdir(type_path):
+            continue
+        datasets = os.listdir(type_path)
+        for dataset in datasets:
+            data = json.load(open(f'{type_path}/{dataset}'))
+            save_path = f'data/neutral/{dataset_type}_{dataset}'
+            if os.path.exists(save_path):
+                continue
+            pbar = tqdm(total=len(data), leave=False)
+            pbar.set_description_str(dataset)
+            res = []
+            for item in data:
+                claim = item['claim']
+                claim = construct_length(claim)
+                prompt = 'Rewrite the following passage, ensuring the content is the same. ' \
+                         'Meanwhile, make the passage neutral emotionally. The passage is: {}'.format(claim)
+                new_claim = get_reply(prompt)
+                res.append({
+                    'claim': new_claim,
+                    'label': item['label']
+                })
+                pbar.update()
+            json.dump(res, open(save_path, 'w'))
+
+
+if __name__ == '__main__':
+    main()
