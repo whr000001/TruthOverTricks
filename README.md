@@ -24,6 +24,38 @@ We have also uploaded our employed sampled datasets. (16 datasets, refer to our 
 
 If you employ our version, please describe it correctly and cite our paper and the original paper.
 
+## Intrinsic
+We evaluate four widely used misinformation indicators (sentiment, style, topic, perplexity) under intrinsic settings.
+
+If you want to split the dataset by yourself, pls run:
+```
+cd intrinsic
+python <perplexity, sentiment, style, topic>-analysis.py
+python <perplexity, sentiment, style, topic>-split.py
+```
+
+## Extrinsic
+We have designed three types of extrinsic injection: (i) vanilla/llm-generation (as baseline for comparison); (ii) explicit (sentiment, tone, and word-choice); and (iii) implicit (age and gender). 
+
+If you want to generate the manipulated instances by yourself, pls run:
+```
+cd extrinsic
+python <age, gender, llm-generation, sentiment, tone, word-choice>.py
+```
+
+## SMF
+We have designed three prompts to generate debiased instances using LLMs: vanilla, neutral, and summary.
+
+If you want to generate the instances of SMF by yourself, pls run:
+```
+cd SMF
+python <neutralm, summary, vanilla>.py
+```
+
+## Evaluate misinformation detectors under TruthOverTricks
+
+TBD
+
 ## Citation
 If you find our work interesting/helpful, please consider citing this paper
 ```
