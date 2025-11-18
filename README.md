@@ -54,7 +54,26 @@ python <neutralm, summary, vanilla>.py
 
 ## Evaluate misinformation detectors under TruthOverTricks
 
-TBD
+For every detector except LLM-based detectors, you could obtain the results by running:
+```
+cd src
+cd <LMs, catch, cmtr, disc>
+python <intrinsic, extrinsic, SMF>_train.py
+```
+Before running this, you may need to preprocess the datasets by running:
+```
+python encode_everything.py  # LMs
+python abstractive.py  # cmtr
+python extractive.py  # cmtr
+python encode_everything.py  # cmtr
+python preprocess  # disc
+```
+For LLM-based detectors, you could obtain the response of LLMs by running:
+```
+python response_everything.py --llm <mistral, llama>
+```
+
+Noted that for some detectors, you may need to determine the LMs or datasets by adding "--lm bert" or "--dataset twitter16"
 
 ## Citation
 If you find our work interesting/helpful, please consider citing this paper
